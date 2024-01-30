@@ -1,9 +1,13 @@
+// main file (app.js or server.js)
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const socketio = require('socket.io');
 const http = require('http');
 require('dotenv').config();
+
+// Import adminRoutes correctly
+const adminRoutes = require('./routes/admin/adminRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -16,8 +20,6 @@ mongoose.connect(process.env.MONGODB_URI);
 app.use(cors());
 app.use(express.json());
 
-
-
 // Socket.io
 io.on('connection', (socket) => {
     console.log('A user connected');
@@ -26,6 +28,9 @@ io.on('connection', (socket) => {
         console.log('User disconnected');
     });
 });
+
+// Use the adminRoutes
+app.use('/admin', adminRoutes);
 
 const PORT = process.env.PORT || 3000;
 
